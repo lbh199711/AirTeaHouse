@@ -112,30 +112,14 @@ public class MainActivity extends AppCompatActivity {
                     rgbaHexArray[i] = String.join("", rgbaHexArrayFrag);
                 }
 
-                text_color_1_view.setText(rgbaHexArray[0]);
-                text_color_2_view.setText(rgbaHexArray[1]);
-                text_color_3_view.setText(rgbaHexArray[2]);
-                text_color_4_view.setText(rgbaHexArray[3]);
-                text_color_5_view.setText(rgbaHexArray[4]);
-                text_color_6_view.setText(rgbaHexArray[5]);
-                text_color_7_view.setText(rgbaHexArray[6]);
-                text_color_8_view.setText(rgbaHexArray[7]);
-                Log.d("COLOR1", "#"+rgbaHexArray[0]);
-                Log.d("COLOR2", "#"+rgbaHexArray[1]);
-                Log.d("COLOR3", "#"+rgbaHexArray[2]);
-                Log.d("COLOR4", "#"+rgbaHexArray[3]);
-                Log.d("COLOR5", "#"+rgbaHexArray[4]);
-                Log.d("COLOR6", "#"+rgbaHexArray[5]);
-                Log.d("COLOR7", "#"+rgbaHexArray[6]);
-                Log.d("COLOR8", "#"+rgbaHexArray[7]);
-                text_color_1_view.setTextColor(Color.parseColor("#"+rgbaHexArray[0]));
-                text_color_2_view.setTextColor(Color.parseColor("#"+rgbaHexArray[1]));
-                text_color_3_view.setTextColor(Color.parseColor("#"+rgbaHexArray[2]));
-                text_color_4_view.setTextColor(Color.parseColor("#"+rgbaHexArray[3]));
-                text_color_5_view.setTextColor(Color.parseColor("#"+rgbaHexArray[4]));
-                text_color_6_view.setTextColor(Color.parseColor("#"+rgbaHexArray[5]));
-                text_color_7_view.setTextColor(Color.parseColor("#"+rgbaHexArray[6]));
-                text_color_8_view.setTextColor(Color.parseColor("#"+rgbaHexArray[7]));
+                text_color_1_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[0]));
+                text_color_2_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[1]));
+                text_color_3_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[2]));
+                text_color_4_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[3]));
+                text_color_5_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[4]));
+                text_color_6_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[5]));
+                text_color_7_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[6]));
+                text_color_8_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[7]));
 
                 hm = new HashMap<>();
 
