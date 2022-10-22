@@ -17,6 +17,7 @@
         android:theme="@style/Theme.CameraXExample">
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:rotationAnimation="seamless">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
