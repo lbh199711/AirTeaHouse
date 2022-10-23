@@ -7,7 +7,7 @@ android {
     buildToolsVersion "31.0.0"
 
     defaultConfig {
-        applicationId "com.hisona.cameraxexample"
+        applicationId "com.lbh199711.AirTeahouse"
         minSdkVersion 31
         targetSdkVersion 31
         versionCode 1

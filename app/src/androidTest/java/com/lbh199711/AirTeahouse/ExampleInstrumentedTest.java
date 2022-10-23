@@ -1,4 +1,4 @@
-package com.hisona.cameraxexample;
+package com.lbh199711.AirTeahouse;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.hisona.cameraxexample", appContext.getPackageName());
+        assertEquals("com.lbh199711.AirTeahouse", appContext.getPackageName());
     }
 }
