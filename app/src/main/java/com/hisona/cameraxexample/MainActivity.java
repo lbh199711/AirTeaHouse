@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     ConstraintLayout container;
     ImageButton camera_capture_button;
+    ImageButton mic_activity_button;
     PreviewView view_finder;
     Executor executor;
 
@@ -129,6 +131,17 @@ public class MainActivity extends AppCompatActivity {
         if(checkPermission()) {
             startCamera();
         }
+
+        // to camera view
+        mic_activity_button = findViewById(R.id.mic_activity_button);
+        mic_activity_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent switchActivityIntent = new Intent(MainActivity.this, MicActivity.class);
+                startActivity(switchActivityIntent);
+            }
+        });
+
     }
 
     private boolean checkPermission() {
