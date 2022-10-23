@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
     TextView text_color_7_view;
     TextView text_color_8_view;
 
-    private long mLastAnalysisResultTime;
     Map<String, Integer> hm = new HashMap<>();
+    private boolean capturing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event){
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    capturing = true;
                     micImage.setBackgroundColor(Color.parseColor("#2F00BCD4"));
                     micImage.getBackground().setAlpha(255);
                     text_color_1_view.setBackgroundColor(Color.parseColor("#00000000"));
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     text_color_8_view.setBackgroundColor(Color.parseColor("#00000000"));
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP){
+                    capturing = false;
                     micImage.getBackground().setAlpha(0);
                     String[] rgbaHexArray = new String[TOP_N_COUNT];
 
@@ -218,10 +220,9 @@ public class MainActivity extends AppCompatActivity {
         imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
             @Override
             public void analyze(@NonNull ImageProxy image) {
-//                int rotationDegrees = image.getImageInfo().getRotationDegrees();
 
                 // color calculation
-                if (image.getFormat() == PixelFormat.RGBA_8888){
+                if (image.getFormat() == PixelFormat.RGBA_8888 && capturing){
                     ImageProxy.PlaneProxy[] planes = image.getPlanes();
                     ByteBuffer buffer = planes[0].getBuffer();
 
