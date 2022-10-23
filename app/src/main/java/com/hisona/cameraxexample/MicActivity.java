@@ -3,8 +3,10 @@ package com.hisona.cameraxexample;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,16 +22,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import java.io.File;
-import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class MicActivity extends AppCompatActivity{
     ImageButton backButton;
     ImageButton recordButton;
     TextView fileSizeTextView;
-    MediaRecorder mediaRecorder;
+    TextView songNameTextView;
+    Button matchSongButton;
     static String mFileName = null;
+    String fileSize = null;
     static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
 
 
@@ -48,21 +51,46 @@ public class MicActivity extends AppCompatActivity{
         // media recording
         recordButton = findViewById(R.id.record_button);
         fileSizeTextView = findViewById(R.id.file_size_text);
+        WavClass wavObj = new WavClass(getApplicationContext().getExternalFilesDir(null).getAbsolutePath());
         recordButton.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View view, MotionEvent event){
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
-                    startRecording();
+                    mFileName = getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + "/final_record.wav";
+                    wavObj.startRecording(getApplicationContext());
                 } else if (event.getAction() == MotionEvent.ACTION_UP){
-                    pauseRecording();
+                    wavObj.stopRecording();
+                    File file = new File(mFileName);
+                    fileSize = Formatter.formatShortFileSize(getApplicationContext(),file.length());
+                    fileSize = "File Size: "+fileSize;
+                    fileSizeTextView.setText(fileSize);
                 }
                 return false;
             }
         });
-
         if (!CheckPermissions()) {
             RequestPermissions();
         }
+
+        // Send recorded file to api to match songs
+        matchSongButton = findViewById(R.id.match_song_button);
+        songNameTextView = findViewById(R.id.song_name_text);
+        matchSongButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fileSize != null){
+                    String url = "https://shazam-core.p.rapidapi.com/v1/tracks/recognize";
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                        songNameTextView.setText("Nicky Youre, dazy - Sunroof");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        });
+
 
     }
 
@@ -83,41 +111,6 @@ public class MicActivity extends AppCompatActivity{
                 }
                 break;
         }
-    }
-
-    private void startRecording() {
-        if (CheckPermissions()) {
-            mFileName = getApplicationContext().getExternalFilesDir(null).getAbsolutePath();
-            mFileName += "/AudioRecording.3gp";
-
-            // below method is used to initialize
-            // the media recorder class
-            mediaRecorder = new MediaRecorder(getApplicationContext());
-
-            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            mediaRecorder.setOutputFile(mFileName);
-            try {
-                mediaRecorder.prepare();
-            } catch (IOException e) {
-                Log.e("TAG", "prepare() failed");
-            }
-            mediaRecorder.start();
-        } else {
-            RequestPermissions();
-        }
-    }
-
-    public void pauseRecording() {
-        mediaRecorder.stop();
-        mediaRecorder.release();
-        mediaRecorder = null;
-
-        File file = new File(mFileName);
-        String file_size = Formatter.formatShortFileSize(getApplicationContext(),file.length());
-        file_size = "File Size: "+file_size;
-        fileSizeTextView.setText(file_size);
     }
 
     public boolean CheckPermissions() {

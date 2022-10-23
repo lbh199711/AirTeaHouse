@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CameraX Example</string>
+    <string name="app_name">Air Tea House</string>
     <string name="capture_button_alt">Capture</string>
     <string name="unknown">UNKNOWN</string>
 
@@ -10,9 +10,8 @@
     <string name="scanned_data">Scanned Data</string>
     <string name="audio_recorder">Audio Recorder</string>
     <string name="start_recording">Hold to Record</string>
-    <string name="stop_recording">Stop Recording</string>
-    <string name="play_recording">Play Recording</string>
     <string name="stop_playing">Stop Playing</string>
     <string name="file_size">File Size</string>
+    <string name="match_song">Find Song</string>
     <string name="status">Status</string>
 </resources>

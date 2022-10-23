@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                             int r = buffer.get(i) & 0xff;
                             int g = buffer.get(i+1) & 0xff;
                             int b = buffer.get(i+2) & 0xff;
-                            int _ = buffer.get(i+3) & 0xff; // this is always FA
+                            int a = buffer.get(i+3) & 0xff; // this is always FA
                             String rgbaStr = Integer.toString(r/RGBA_COMPRESSION_RATE) +'|'
                                     + g/RGBA_COMPRESSION_RATE +'|'
                                     + b/RGBA_COMPRESSION_RATE;
