@@ -25,8 +25,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     ConstraintLayout container;
     ImageButton camera_capture_button;
+    ImageView micImage;
     PreviewView view_finder;
     Executor executor;
 
@@ -86,43 +89,59 @@ public class MainActivity extends AppCompatActivity {
         text_color_7_view = findViewById(R.id.text_color_7);
         text_color_8_view = findViewById(R.id.text_color_8);
         camera_capture_button = findViewById(R.id.camera_capture_button);
+        micImage = findViewById(R.id.microphone_picture);
         view_finder = findViewById(R.id.view_finder);
 
         executor = Executors.newSingleThreadExecutor();
 
-        camera_capture_button.setOnClickListener(new View.OnClickListener() {
+        camera_capture_button.setOnTouchListener(new View.OnTouchListener(){
             @Override
-            public void onClick(View v) {
-                String[] rgbaHexArray = new String[TOP_N_COUNT];
+            public boolean onTouch(View view, MotionEvent event){
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    micImage.setBackgroundColor(Color.parseColor("#2F00BCD4"));
+                    micImage.getBackground().setAlpha(255);
+                    text_color_1_view.setBackgroundColor(Color.parseColor("#00000000"));
+                    text_color_2_view.setBackgroundColor(Color.parseColor("#00000000"));
+                    text_color_3_view.setBackgroundColor(Color.parseColor("#00000000"));
+                    text_color_4_view.setBackgroundColor(Color.parseColor("#00000000"));
+                    text_color_5_view.setBackgroundColor(Color.parseColor("#00000000"));
+                    text_color_6_view.setBackgroundColor(Color.parseColor("#00000000"));
+                    text_color_7_view.setBackgroundColor(Color.parseColor("#00000000"));
+                    text_color_8_view.setBackgroundColor(Color.parseColor("#00000000"));
 
-                List<Map.Entry<String, Integer>> mostCommonRgba = findGreatest(hm, TOP_N_COUNT);
-                for (int i = 0; i < mostCommonRgba.size(); i++){
-                    String[] rgbaStrArrayFrag = mostCommonRgba.get(i).getKey().split("\\|",4);
-                    String[] rgbaHexArrayFrag = new String[rgbaStrArrayFrag.length];
-                    for (int j = 0; j < rgbaStrArrayFrag.length; j++) {
-                        String hexString = Integer.toHexString(
-                                Integer.parseInt(rgbaStrArrayFrag[j])*RGBA_COMPRESSION_RATE
-                        );
-                        if (hexString.length() == 1){
-                            // pad zero make sure color coding is always 6 digits
-                            hexString = "0"+hexString;
+                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                    micImage.getBackground().setAlpha(0);
+                    String[] rgbaHexArray = new String[TOP_N_COUNT];
+
+                    List<Map.Entry<String, Integer>> mostCommonRgba = findGreatest(hm, TOP_N_COUNT);
+                    for (int i = 0; i < mostCommonRgba.size(); i++){
+                        String[] rgbaStrArrayFrag = mostCommonRgba.get(i).getKey().split("\\|",4);
+                        String[] rgbaHexArrayFrag = new String[rgbaStrArrayFrag.length];
+                        for (int j = 0; j < rgbaStrArrayFrag.length; j++) {
+                            String hexString = Integer.toHexString(
+                                    Integer.parseInt(rgbaStrArrayFrag[j])*RGBA_COMPRESSION_RATE
+                            );
+                            if (hexString.length() == 1){
+                                // pad zero make sure color coding is always 6 digits
+                                hexString = "0"+hexString;
+                            }
+                            rgbaHexArrayFrag[j] = hexString;
                         }
-                        rgbaHexArrayFrag[j] = hexString;
+                        rgbaHexArray[i] = String.join("", rgbaHexArrayFrag);
                     }
-                    rgbaHexArray[i] = String.join("", rgbaHexArrayFrag);
+
+                    text_color_1_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[0]));
+                    text_color_2_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[1]));
+                    text_color_3_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[2]));
+                    text_color_4_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[3]));
+                    text_color_5_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[4]));
+                    text_color_6_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[5]));
+                    text_color_7_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[6]));
+                    text_color_8_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[7]));
+
+                    hm = new HashMap<>();
                 }
-
-                text_color_1_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[0]));
-                text_color_2_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[1]));
-                text_color_3_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[2]));
-                text_color_4_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[3]));
-                text_color_5_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[4]));
-                text_color_6_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[5]));
-                text_color_7_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[6]));
-                text_color_8_view.setBackgroundColor(Color.parseColor("#"+rgbaHexArray[7]));
-
-                hm = new HashMap<>();
-
+                return false;
             }
         });
 
@@ -212,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                             int r = buffer.get(i) & 0xff;
                             int g = buffer.get(i+1) & 0xff;
                             int b = buffer.get(i+2) & 0xff;
-                            int _ = buffer.get(i+3) & 0xff; // this is always FA
+                            int a = buffer.get(i+3) & 0xff; // this is always FA
                             String rgbaStr = Integer.toString(r/RGBA_COMPRESSION_RATE) +'|'
                                     + g/RGBA_COMPRESSION_RATE +'|'
                                     + b/RGBA_COMPRESSION_RATE;
